@@ -13,7 +13,7 @@ jobs:
       matrix:
         preset: [host-debug, host-asan]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install tools
         run: |
@@ -27,7 +27,7 @@ jobs:
     name: mcu-check (Cortex-M7)
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install Arm GNU toolchain
         run: |
@@ -41,7 +41,7 @@ jobs:
     name: clang-format
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Check formatting
         run: |
