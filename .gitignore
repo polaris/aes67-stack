@@ -8,3 +8,6 @@ crash-*
 leak-*
 timeout-*
 *.wav
+
+settings.json
+/notes/
