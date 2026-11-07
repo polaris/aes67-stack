@@ -18,8 +18,6 @@ option(AES67_BUILD_FUZZ "Build libFuzzer targets (Clang only)" OFF)
 option(AES67_WARNINGS_AS_ERRORS "Treat compiler warnings as errors" OFF)
 option(AES67_ENABLE_SANITIZERS "Build with AddressSanitizer and UBSan" OFF)
 
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # for clang-tidy
-
 # ---------------------------------------------------------------------------
 # Core library: portable, no OS, no malloc
 # ---------------------------------------------------------------------------
