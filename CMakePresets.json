@@ -1,0 +1,120 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": { "major": 3, "minor": 25, "patch": 0 },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+    {
+      "name": "host-debug",
+      "displayName": "Host, GCC, debug",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "gcc",
+        "CMAKE_BUILD_TYPE": "Debug",
+        "AES67_BUILD_TESTS": "ON",
+        "AES67_BUILD_APPS": "ON",
+        "AES67_WARNINGS_AS_ERRORS": "ON"
+      }
+    },
+    {
+      "name": "host-asan",
+      "displayName": "Host, Clang, ASan + UBSan",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_BUILD_TYPE": "Debug",
+        "AES67_BUILD_TESTS": "ON",
+        "AES67_BUILD_APPS": "ON",
+        "AES67_ENABLE_SANITIZERS": "ON",
+        "AES67_WARNINGS_AS_ERRORS": "ON"
+      }
+    },
+    {
+      "name": "host-fuzz",
+      "displayName": "Host, Clang, libFuzzer targets",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "AES67_BUILD_TESTS": "OFF",
+        "AES67_BUILD_APPS": "OFF",
+        "AES67_BUILD_FUZZ": "ON",
+        "AES67_ENABLE_SANITIZERS": "ON"
+      }
+    },
+    {
+      "name": "bbb",
+      "displayName": "BeagleBone Black (Yocto SDK, source environment first)",
+      "inherits": "base",
+      "toolchainFile": "$env{OECORE_NATIVE_SYSROOT}/usr/share/cmake/OEToolchainConfig.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "AES67_BUILD_TESTS": "OFF",
+        "AES67_BUILD_APPS": "ON"
+      }
+    },
+    {
+      "name": "mcu-check",
+      "displayName": "Cortex-M7 (NUCLEO-H753ZI), core only",
+      "inherits": "base",
+      "toolchainFile": "${sourceDir}/cmake/toolchain-arm-none-eabi.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "MinSizeRel",
+        "AES67_BUILD_TESTS": "OFF",
+        "AES67_BUILD_APPS": "OFF",
+        "AES67_WARNINGS_AS_ERRORS": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    { "name": "host-debug", "configurePreset": "host-debug" },
+    { "name": "host-asan", "configurePreset": "host-asan" },
+    { "name": "host-fuzz", "configurePreset": "host-fuzz" },
+    { "name": "bbb", "configurePreset": "bbb" },
+    { "name": "mcu-check", "configurePreset": "mcu-check" }
+  ],
+  "testPresets": [
+    {
+      "name": "host-debug",
+      "configurePreset": "host-debug",
+      "output": { "outputOnFailure": true }
+    },
+    {
+      "name": "host-asan",
+      "configurePreset": "host-asan",
+      "output": { "outputOnFailure": true }
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "host-debug",
+      "steps": [
+        { "type": "configure", "name": "host-debug" },
+        { "type": "build", "name": "host-debug" },
+        { "type": "test", "name": "host-debug" }
+      ]
+    },
+    {
+      "name": "host-asan",
+      "steps": [
+        { "type": "configure", "name": "host-asan" },
+        { "type": "build", "name": "host-asan" },
+        { "type": "test", "name": "host-asan" }
+      ]
+    },
+    {
+      "name": "mcu-check",
+      "steps": [
+        { "type": "configure", "name": "mcu-check" },
+        { "type": "build", "name": "mcu-check" }
+      ]
+    }
+  ]
+}

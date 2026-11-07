@@ -1,0 +1,10 @@
+/build/
+/.cache/
+compile_commands.json
+*.pcap
+!tests/data/*.pcap
+!tests/data/*.pcapng
+crash-*
+leak-*
+timeout-*
+*.wav
