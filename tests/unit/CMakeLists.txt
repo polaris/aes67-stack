@@ -18,7 +18,7 @@ function(aes67_add_unit_test source)
         C_EXTENSIONS OFF)
     target_link_libraries(${name} PRIVATE aes67::core unity)
     target_compile_definitions(${name} PRIVATE
-        AES67_TEST_DATA_DIR="${CMAKE_SOURCE_DIR}/tests/data")
+        AES67_TEST_DATA_DIR="${PROJECT_SOURCE_DIR}/tests/data")
     aes67_set_warnings(${name})
     aes67_enable_sanitizers(${name})
     add_test(NAME ${name} COMMAND ${name})
