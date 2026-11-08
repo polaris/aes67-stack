@@ -46,7 +46,8 @@
         "AES67_BUILD_TESTS": "OFF",
         "AES67_BUILD_APPS": "OFF",
         "AES67_BUILD_FUZZ": "ON",
-        "AES67_ENABLE_SANITIZERS": "ON"
+        "AES67_ENABLE_SANITIZERS": "ON",
+        "AES67_WARNINGS_AS_ERRORS": "ON"
       }
     },
     {
