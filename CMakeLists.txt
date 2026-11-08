@@ -1,13 +1,16 @@
 cmake_minimum_required(VERSION 3.25)
 
-project(aes67_stack
-    VERSION 0.1.0
-    DESCRIPTION "Portable AES67 stack in C11"
-    LANGUAGES C)
-
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+include(aes67-version)
 include(warnings)
 include(sanitizers)
+
+aes67_read_version("${CMAKE_CURRENT_SOURCE_DIR}/include/aes67/version.h" AES67_VERSION)
+
+project(aes67_stack
+    VERSION ${AES67_VERSION}
+    DESCRIPTION "Portable AES67 stack in C11"
+    LANGUAGES C)
 
 # ---------------------------------------------------------------------------
 # Options
