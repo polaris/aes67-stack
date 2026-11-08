@@ -16,9 +16,6 @@ function(aes67_add_fuzz_target source)
     aes67_enable_sanitizers(${name})
 endfunction()
 
-# The core itself needs coverage instrumentation for libFuzzer.
-target_compile_options(aes67_core PRIVATE -fsanitize=fuzzer-no-link)
-
 file(GLOB AES67_FUZZ_TARGETS CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/fuzz_*.c")
 

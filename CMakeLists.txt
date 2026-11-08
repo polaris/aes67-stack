@@ -50,6 +50,8 @@ if(AES67_BUILD_FUZZ)
     if(NOT CMAKE_C_COMPILER_ID MATCHES "Clang")
         message(FATAL_ERROR "AES67_BUILD_FUZZ requires Clang (libFuzzer)")
     endif()
+    # The core itself needs coverage instrumentation for libFuzzer.
+    target_compile_options(aes67_core PRIVATE -fsanitize=fuzzer-no-link)
     add_subdirectory(tests/fuzz)
 endif()
 
