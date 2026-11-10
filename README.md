@@ -73,4 +73,4 @@ Write-ups with measurements per phase: [docs/results/](docs/results/).
 
 ## License
 
-TBD (MIT or Apache-2.0).
+MIT, see [LICENSE](LICENSE).
