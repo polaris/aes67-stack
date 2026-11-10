@@ -85,7 +85,7 @@ Das ist bewusst kein vollständiges MISRA C, sondern ein leichter Satz von Regel
 
 ## Verzeichnisstruktur
 
-Öffentliches Repository `aes67-stack` unter der Lizenz MIT oder Apache-2.0. Apache-2.0 enthält zusätzlich eine Patentklausel, MIT ist kürzer. Beides ist für Embedded-Code üblich. Das ebenfalls öffentliche `bbb-aes67-lab` bleibt für Yocto und Testaufbau zuständig. Vor dem ersten Push den Arbeitsvertrag auf Regeln zu Rechten an privat entwickeltem Code prüfen.
+Öffentliches Repository `aes67-stack` unter der Lizenz MIT (Entscheidung in `docs/adr/0003-license-mit.md`). Das ebenfalls öffentliche `bbb-aes67-lab` bleibt für Yocto und Testaufbau zuständig. Vor dem ersten Push den Arbeitsvertrag auf Regeln zu Rechten an privat entwickeltem Code prüfen.
 
 ```text
 aes67-stack/
@@ -93,7 +93,7 @@ aes67-stack/
 ├── CMakePresets.json
 ├── CLAUDE.md                 # rules for Claude Code
 ├── README.md                 # goal, setup, results, how to build
-├── LICENSE                   # MIT or Apache-2.0
+├── LICENSE                   # MIT (ADR 0003)
 ├── .clang-format
 ├── .clang-tidy
 ├── .gitignore
@@ -279,7 +279,7 @@ beide ohne Warnung durchlaufen, der CI-Lauf auf GitHub grün ist und du `docs/ap
 
 **Ziel:** Das Programm `aes67-sapdump` zeigt auf dem Board alle AES67-Ströme im Netz mit Adresse, Port und Format.
 
-**Was du lernst:** Binärprotokolle sicher parsen (SAP), Textprotokolle sicher parsen (SDP), Multicast-Empfang unter Linux.
+**Was du lernst:** Binärprotokolle sicher parsen (SAP), Textprotokolle sicher parsen (SDP), Multicast-Empfang unter Linux, CMake für Programme statt Bibliotheken.
 
 **Hintergrund**
 
@@ -304,6 +304,8 @@ a=mediaclk:direct=<offset>                     RTP timestamp offset
 5. Fuzz-Ziele `fuzz_sap.c` und `fuzz_sdp.c`, jeweils mindestens 10 Minuten ohne Fund laufen lassen.
 6. Plattform: `net_posix.c` mit Funktionen zum Öffnen eines UDP-Sockets und Beitreten einer Multicast-Gruppe (`IP_ADD_MEMBERSHIP` an `eth0`).
 7. App `apps/sapdump`: Ankündigungen empfangen, Ströme in einer Tabelle halten, bei Änderung ausgeben. Abgekündigte Ströme entfernen.
+
+   **CMake für die erste App** (Übung E aus dem CMake-Lernplan): Den C-Code der App darf Claude Code schreiben, die CMake-Einbindung schreibst du, Claude Code reviewt. Eigenes Target mit Warnungen und Sanitizern, `_POSIX_C_SOURCE` nur für App und Portierung (nie für den Kern), `install()`-Regel für das Programm, baut auch im Preset `bbb`.
 
 **Fertig, wenn:** `aes67-sapdump` auf dem Board den Flow des AVIO mit denselben Werten zeigt wie Wireshark, alle Tests grün sind und die Fuzzer nichts finden.
 
