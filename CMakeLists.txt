@@ -20,6 +20,7 @@ option(AES67_BUILD_APPS "Build POSIX command-line apps" ON)
 option(AES67_BUILD_FUZZ "Build libFuzzer targets (Clang only)" OFF)
 option(AES67_WARNINGS_AS_ERRORS "Treat compiler warnings as errors" OFF)
 option(AES67_ENABLE_SANITIZERS "Build with AddressSanitizer and UBSan" OFF)
+option(AES67_INSTALL "Generate install rules" ${PROJECT_IS_TOP_LEVEL})
 
 # ---------------------------------------------------------------------------
 # Core library: portable, no OS, no malloc
@@ -30,13 +31,17 @@ file(GLOB AES67_CORE_SOURCES CONFIGURE_DEPENDS
 add_library(aes67_core STATIC ${AES67_CORE_SOURCES})
 add_library(aes67::core ALIAS aes67_core)
 
-target_include_directories(aes67_core
-    PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+include(GNUInstallDirs)
+
+target_include_directories(aes67_core PUBLIC
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 
 set_target_properties(aes67_core PROPERTIES
     C_STANDARD 11
     C_STANDARD_REQUIRED ON
-    C_EXTENSIONS OFF)
+    C_EXTENSIONS OFF
+    EXPORT_NAME core)
 
 aes67_set_warnings(aes67_core)
 aes67_enable_sanitizers(aes67_core)
@@ -60,4 +65,31 @@ endif()
 
 if(AES67_BUILD_APPS AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/apps/CMakeLists.txt")
     add_subdirectory(apps)
+endif()
+
+# ---------------------------------------------------------------------------
+# Install configuration
+# ---------------------------------------------------------------------------
+if(AES67_INSTALL)
+    set(AES67_INSTALL_CMAKE_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/aes67")
+
+    install(TARGETS aes67_core EXPORT aes67Targets
+            ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+    install(EXPORT aes67Targets
+            NAMESPACE aes67::
+            DESTINATION "${AES67_INSTALL_CMAKE_DIR}")
+    install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/aes67"
+            DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+
+    include(CMakePackageConfigHelpers)
+
+    configure_package_config_file("${CMAKE_CURRENT_SOURCE_DIR}/cmake/aes67Config.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/aes67Config.cmake"
+        INSTALL_DESTINATION "${AES67_INSTALL_CMAKE_DIR}")
+
+    write_basic_package_version_file("${CMAKE_CURRENT_BINARY_DIR}/aes67ConfigVersion.cmake"
+        VERSION ${PROJECT_VERSION}
+        COMPATIBILITY SameMinorVersion)
+
+    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/aes67Config.cmake" "${CMAKE_CURRENT_BINARY_DIR}/aes67ConfigVersion.cmake"
+            DESTINATION "${AES67_INSTALL_CMAKE_DIR}")
 endif()
